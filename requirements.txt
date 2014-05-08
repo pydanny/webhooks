@@ -1,0 +1,3 @@
+wrapt>=1.8.0
+requests>=2.2.1
+wheel>=0.22.0
