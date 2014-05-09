@@ -3,7 +3,7 @@ from time import sleep
 
 import requests
 
-from .encoders import WebHooksJSONEncoder
+from ..encoders import WebHooksJSONEncoder
 
 # This is a simplistic webhooks table. Real lists would probably include the
 #   following:
@@ -30,7 +30,7 @@ WEBHOOKS = {
 ATTEMPTS = [0, 1, 2, 3, 4]
 
 
-def sender(wrapped, event, creator, *args, **kwargs):
+def sender(wrapped, event, *args, **kwargs):
     """
         This is the simplest sender callable I can create. It does 3 things:
 
@@ -58,6 +58,10 @@ def sender(wrapped, event, creator, *args, **kwargs):
         it's own function or method.
     """
 
+    # Get the creator. We don't do anything here, but in other sender functions
+    #   we would
+    creator = kwargs['creator']
+
     # Create the payload by calling the hooked/wrapped function.
     payload = wrapped(*args, **kwargs)
 
@@ -70,12 +74,13 @@ def sender(wrapped, event, creator, *args, **kwargs):
 
     # Loop through the attempts and log each attempt
     for attempt in range(len(ATTEMPTS) - 1):
-
         # Print each attempt. In practice, this would either write to logs or
         #   submit to a write-fast DB like Redis.
         print(
             "Attempt: {attempt}, {target_url}\n{payload}".format(
-                attempt, target_url, payload
+                attempt=attempt,
+                target_url=target_url,
+                payload=payload
             )
         )
 

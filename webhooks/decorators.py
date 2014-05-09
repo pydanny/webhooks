@@ -4,9 +4,13 @@ Where the hook function/decorator is stored
 """
 import wrapt
 
+from .exceptions import SenderNotCallable
 
-def hook(event, hash=True, sender="webhooks.simple.sender"):
-    # TODO - possibly remove sender default
+__all__ = ("hook", "webhook")
+
+
+def hook(event, sender_callable, hash=True):
+    # TODO - make a Django version that avoids the sender argument.
 
     @wrapt.decorator
     def wrapper(wrapped, instance, args, kwargs):
@@ -14,12 +18,13 @@ def hook(event, hash=True, sender="webhooks.simple.sender"):
             kwargs needs to include an 'creator' key
         """
 
+        if not callable(sender_callable):
+            raise SenderNotCallable(sender_callable)
+
         try:
-            creator = kwargs["creator"]
+            kwargs["creator"]
         except KeyError:
             raise KeyError("Hooks must include a creator keyword argument")
-
-        sender_callable = __import__(sender)
 
         ##################################
         # :wrapped: hooked function delivering a payload
@@ -28,7 +33,7 @@ def hook(event, hash=True, sender="webhooks.simple.sender"):
         # :kwargs: Keyword arguments for the wrapped function. Must include 'creator'
 
         # Send the hooked function
-        sender_callable.send(wrapped, event, creator, *args, **kwargs)
+        sender_callable(wrapped, event, *args, **kwargs)
 
     return wrapper
 
