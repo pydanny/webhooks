@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 from time import sleep
 
@@ -17,12 +19,12 @@ from ..encoders import WebHooksJSONEncoder
 
 WEBHOOKS = {
     # event       Target URL
-    "example200": "http://httpbin.org/status/200",
-    "example201": "http://httpbin.org/status/201",
-    "example202": "http://httpbin.org/status/202",
-    "example302": "http://httpbin.org/status/302",
-    "example404": "http://httpbin.org/status/404",
-    "example500": "http://httpbin.org/status/500",
+    "example200": "http://httpbin.org/post",
+    "example201": "http://httpbin.org/post",
+    "example202": "http://httpbin.org/post",
+    "example302": "http://httpbin.org/post",
+    "example404": "http://httpbin.org/post",
+    "example500": "http://httpbin.org/post",
 
 }
 
@@ -93,7 +95,7 @@ def sender(wrapped, event, *args, **kwargs):
             #   result of this should be tracked outside the current flow.
             #   In practice, this means writing the result to a datastore.
             print("SUCCESS!!!")
-            return
+            return payload
 
         # Print the current status of things and try again.
         #   In practice this would also write a database or logs.
@@ -107,4 +109,4 @@ def sender(wrapped, event, *args, **kwargs):
     #   result of this should be tracked outside the current flow.
     #   In practice, this means writing the result to a datastore.
     print("FAILURE!!!")
-    return
+    return payload

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Where the hook function/decorator is stored
+Where the hook function/decorator is stored.
+Unlike the standard webhooks.decorator, this doesn't
+    have the developer specify the exact sender callable.
 """
 
 from django.core.exceptions import ImproperlyConfigured

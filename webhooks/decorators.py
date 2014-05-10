@@ -33,7 +33,13 @@ def hook(event, sender_callable, hash=True):
         # :kwargs: Keyword arguments for the wrapped function. Must include 'creator'
 
         # Send the hooked function
-        sender_callable(wrapped, event, *args, **kwargs)
+        status = sender_callable(wrapped, event, *args, **kwargs)
+
+        # Status can be anything:
+        #   * The result of a synchronous sender
+        #   * A generic status message for asynchronous senders
+        #   * 
+        return status
 
     return wrapper
 
