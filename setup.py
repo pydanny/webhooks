@@ -32,6 +32,7 @@ setup(
                  'webhooks'},
     include_package_data=True,
     install_requires=[
+        'wrapt',
     ],
     license="BSD",
     zip_safe=False,
