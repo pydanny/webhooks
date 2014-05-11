@@ -13,14 +13,36 @@ import json
 
 from webhooks.encoders import WebHooksJSONEncoder
 
-
+# Unit tests
 
 def test_json_encoder_date():
     """ WebHooksJSONEncoder should work with dates. """
-    items = json.dumps({'day': datetime.date(2010, 2, 17)}, cls=WebHooksJSONEncoder)
-    assert items == '{"day": "2010-02-17"}'
+    encoder = WebHooksJSONEncoder()
+    items = encoder.default(datetime.date(2010, 2, 17))
+    assert items == '2010-02-17'
 
 def test_json_encoder_datetime():
     """ WebHooksJSONEncoder should work with datetimes. """
+    encoder = WebHooksJSONEncoder()
+    items = encoder.default(datetime.datetime(2006, 11, 21, 16, 30))
+    assert items == '2006-11-21T16:30:00'
+
+# Integration tests
+
+def test_json_encoder_date_json():
+    """ WebHooksJSONEncoder should work with dates. Pass in as dumps() cls parameter. """
+    items = json.dumps({'day': datetime.date(2010, 2, 17)}, cls=WebHooksJSONEncoder)
+    assert items == '{"day": "2010-02-17"}'
+
+def test_json_encoder_date2_json():
+    """ WebHooksJSONEncoder should work with dates. Test via encode()."""
+    items = WebHooksJSONEncoder().encode({'day': datetime.date(2010, 2, 17)})
+    assert items == '{"day": "2010-02-17"}'
+
+def test_json_encoder_datetime_json():
+    """ WebHooksJSONEncoder should work with datetimes. Pass in as dumps() cls parameter. """
     items = json.dumps({'day_and_time': datetime.datetime(2006, 11, 21, 16, 30)}, cls=WebHooksJSONEncoder)
     assert items == '{"day_and_time": "2006-11-21T16:30:00"}'
+
+
+
