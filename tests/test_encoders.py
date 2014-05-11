@@ -80,12 +80,7 @@ def test_json_encoder_time_tzinfo_gmt():
         def tzname(self, dt):
             return "GMT"
     items = encoder.default(datetime.time(16, 30, 1, tzinfo=GMT()))
-
-    # This is what default() appears to want to do in lines 25-26, which fails
     assert items == '16:30:01Z'
-
-    # Uncomment to make the test pass
-    # assert items == '16:30:01+00:00'
 
 
 # Integration tests
