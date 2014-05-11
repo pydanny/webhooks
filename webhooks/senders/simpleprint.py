@@ -29,7 +29,7 @@ WEBHOOKS = {
 ATTEMPTS = [0, 1, 2, 3, 4]
 
 
-def sender(wrapped, event, hash_value=None, *args, **kwargs):
+def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
     """
         This is the simplest sender callable I can create. It does 3 things:
 
@@ -68,7 +68,10 @@ def sender(wrapped, event, hash_value=None, *args, **kwargs):
     #   but in other sender functions we might use it to help find the target URL
     payload['creator'] = kwargs['creator']
 
-    # Add the event
+    # get the event
+    event = dkwargs['event']
+
+    # add the event to the payload
     payload['event'] = event
 
     # Dump the payload to json

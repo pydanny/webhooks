@@ -42,8 +42,8 @@ def test_simpleprint_unhash():
 
 def test_targeted_hashed():
 
-    @webhook(event=None, sender_callable=targeted.sender)
-    def basic(event=None, url="http://httpbin.org/post"):
+    @webhook(sender_callable=targeted.sender)
+    def basic(url="http://httpbin.org/post"):
         return {"husband": "Daniel Roy Greenfeld", "wife": "Audrey Roy Greenfeld"}
 
     status = basic(url="http://httpbin.org/post")

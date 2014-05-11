@@ -12,7 +12,7 @@ from ..encoders import WebHooksJSONEncoder
 ATTEMPTS = [0, 1, 2, 3, 4]
 
 
-def sender(wrapped, event, hash_value=None, *args, **kwargs):
+def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
     """
         This is the simplest production-worthy callable I can create. It does 3 things:
 

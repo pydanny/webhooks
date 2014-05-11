@@ -12,7 +12,7 @@ from .exceptions import SenderNotCallable
 __all__ = ("hook", "webhook", "unhashed_hook")
 
 
-def base_hook(event, sender_callable, hash_function):
+def base_hook(sender_callable, hash_function, **dkwargs):
 
     @wrapt.decorator
     def wrapper(wrapped, instance, args, kwargs):
@@ -25,7 +25,8 @@ def base_hook(event, sender_callable, hash_function):
             raise SenderNotCallable(sender_callable)
 
         # Call the hash function and save result to a hash_value argument
-        kwargs['hash_value'] = hash_function()
+        if hash_function is not None:
+            kwargs['hash_value'] = hash_function()
 
         ##################################
         # :wrapped: hooked function delivering a payload
@@ -34,7 +35,7 @@ def base_hook(event, sender_callable, hash_function):
         # :kwargs: Keyword arguments for the wrapped function. Must include 'creator'
 
         # Send the hooked function
-        status = sender_callable(wrapped, event, *args, **kwargs)
+        status = sender_callable(wrapped, dkwargs, *args, **kwargs)
 
         # Status can be anything:
         #   * The result of a synchronous sender
@@ -51,5 +52,5 @@ hook = partial(base_hook, hash_function=basic_hash_function)
 # alias the hook decorator so it's easier to remember the API
 webhook = hook
 
-# This is a hook with a placebo hash function
-unhashed_hook = partial(base_hook, hash_function=placebo_hash_function)
+# This is a hook with no hash function
+unhashed_hook = partial(base_hook, hash_function=None)
