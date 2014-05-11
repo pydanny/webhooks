@@ -10,30 +10,44 @@ Tests for `webhooks` module.
 
 
 from webhooks import webhook, unhashed_hook
-from webhooks.senders.simpleprint import sender
+from webhooks.senders import simpleprint
+from webhooks.senders import targeted
 
 
-def test_200():
+def test_simpleprint_hashed():
 
-    @webhook(event="example200", sender_callable=sender)
+    @webhook(event="example200", sender_callable=simpleprint.sender)
     def basic(creator="pydanny"):
-        return {"name": "Daniel Roy Greenfeld", "spouse": "Audrey Roy Greenfeld"}
+        return {"husband": "Daniel Roy Greenfeld", "wife": "Audrey Roy Greenfeld"}
 
     status = basic(creator='pydanny')
 
-    assert status['spouse'] == "Audrey Roy Greenfeld"
-    assert status['name'] == "Daniel Roy Greenfeld"
+    assert status['wife'] == "Audrey Roy Greenfeld"
+    assert status['husband'] == "Daniel Roy Greenfeld"
     assert len(status['hash']) > 10
 
 
-def test_unhooked_hash():
+def test_simpleprint_unhash():
 
-    @unhashed_hook(event="example200", sender_callable=sender)
+    @unhashed_hook(event="example200", sender_callable=simpleprint.sender)
     def basic(creator="pydanny"):
-        return {"name": "Daniel Roy Greenfeld", "spouse": "Audrey Roy Greenfeld"}
+        return {"husband": "Daniel Roy Greenfeld", "wife": "Audrey Roy Greenfeld"}
 
     status = basic(creator='pydanny')
 
-    assert status['spouse'] == "Audrey Roy Greenfeld"
-    assert status['name'] == "Daniel Roy Greenfeld"
+    assert status['wife'] == "Audrey Roy Greenfeld"
+    assert status['husband'] == "Daniel Roy Greenfeld"
     assert "hash" not in status
+
+
+def test_targeted_hashed():
+
+    @webhook(event=None, sender_callable=targeted.sender)
+    def basic(event=None, url="http://httpbin.org/post"):
+        return {"husband": "Daniel Roy Greenfeld", "wife": "Audrey Roy Greenfeld"}
+
+    status = basic(url="http://httpbin.org/post")
+
+    assert status['wife'] == "Audrey Roy Greenfeld"
+    assert status['husband'] == "Daniel Roy Greenfeld"
+    assert len(status['hash']) > 10

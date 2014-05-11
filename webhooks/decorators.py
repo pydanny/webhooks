@@ -24,12 +24,6 @@ def base_hook(event, sender_callable, hash_function):
         if not callable(sender_callable):
             raise SenderNotCallable(sender_callable)
 
-        # If no creator is passed, stop early for easy debugging
-        try:
-            kwargs["creator"]
-        except KeyError:
-            raise KeyError("Hooks must include a creator keyword argument")
-
         # Call the hash function and save result to a hash_value argument
         kwargs['hash_value'] = hash_function()
 

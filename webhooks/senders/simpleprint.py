@@ -22,9 +22,6 @@ WEBHOOKS = {
     "example200": "http://httpbin.org/post",
     "example201": "http://httpbin.org/post",
     "example202": "http://httpbin.org/post",
-    "example302": "http://httpbin.org/post",
-    "example404": "http://httpbin.org/post",
-    "example500": "http://httpbin.org/post",
 
 }
 
@@ -60,16 +57,19 @@ def sender(wrapped, event, hash_value=None, *args, **kwargs):
         it's own function or method.
     """
 
-    # Get the creator. We don't do anything here, but in other sender functions
-    #   we would
-    creator = kwargs['creator']
-
     # Create the payload by calling the hooked/wrapped function.
     payload = wrapped(*args, **kwargs)
 
     # Add the hash value if there is one.
     if hash_value is not None and len(hash_value) > 0:
         payload['hash'] = hash_value
+
+    # Get the creator and add it to the payload. We don't do anything here,
+    #   but in other sender functions we might use it to help find the target URL
+    payload['creator'] = kwargs['creator']
+
+    # Add the event
+    payload['event'] = event
 
     # Dump the payload to json
     data = json.dumps(payload, cls=WebHooksJSONEncoder)
@@ -109,8 +109,8 @@ def sender(wrapped, event, hash_value=None, *args, **kwargs):
         # Wait a bit before the next attempt
         sleep(attempt)
 
-    # Exit the sender function. We don't provide a return value as the
-    #   result of this should be tracked outside the current flow.
-    #   In practice, this means writing the result to a datastore.
+    # Exit the sender function. We don't provide a return value besides the payload
+    #   as the result of this should be tracked outside the current flow.
+    #   In practice, this probably means writing the result to a datastore.
     print("FAILURE!!!")
     return payload
