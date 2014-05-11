@@ -40,7 +40,7 @@ Follow these easy steps:
 1. Import the ``webhook`` decorator.
 2. Define a function that returns a JSON-serializable dictionary or iterable.
 3. Add the ``webhook`` decorator and pass in a ``sender_callable``.
-4, Call the function!
+4. Call the function!
 
 Synchronous example (async examples to come soon):
 
