@@ -3,39 +3,26 @@
 Where the hook function/decorator is stored.
 Unlike the standard webhooks.decorator, this doesn't
     have the developer specify the exact sender callable.
+
+    Write a sender function that uses the Django ORM to:
+
+        * Queries a WebHook model to find target URLS based on event
+         name and WebHook record creator
+        * Logs the result in a table. Not ideal for production, but
+            just as a way to track simple results
 """
 
-from django.core.exceptions import ImproperlyConfigured
-from django.conf import settings
+from functools import partial
 
-import wrapt
-
-
-WEBHOOKS_SENDER = getattr(settings, "WEBHOOKS_SENDER", "webhooks.backends.base.SyncSQLSender")
-
-try:
-    SenderClass = __import__(WEBHOOKS_SENDER)
-except ImportError:
-    msg = "Please set an existing WEBHOOKS_SENDER class."
-    raise ImproperlyConfigured(msg)
+from .conf import WEBHOOKS_SENDER_CALLABLE
+from ..decorators import base_hook
+from ..hashes import basic_hash_function
 
 
-def hook(event):
-    @wrapt.decorator
-    def wrapper(wrapped, instance, args, kwargs):
-        """ This should calls the SenderClass, which can be defined by the sender.
-            kwargs needs to include an 'creator' key
-        """
-
-        sender = SenderClass(
-            wrapped,  # function delivering a payload
-            event,  # name of the event being called
-            kwargs["creator"],  # The model instance representing the creator of this action
-            *args,  # Argument list for the wrapped function
-            **kwargs  # Kweyword argument list for the wrapped function
-        )
-        sender.send()
-
-    return wrapper
-
-
+# This is decorator that does all the lifting.
+# sender_callable is set via settings.py
+hook = partial(
+    base_hook,
+    sender_callable=WEBHOOKS_SENDER_CALLABLE,
+    hash_function=basic_hash_function
+)
