@@ -28,15 +28,13 @@ lint:
 	flake8 webhooks tests
 
 test:
-	python setup.py test
+	py.test --cov webhooks
 
 test-all:
 	tox
 
 coverage:
-	coverage run --source webhooks setup.py test
-	coverage report -m
-	coverage html
+	py.test --cov webhooks
 	open htmlcov/index.html
 
 docs:
