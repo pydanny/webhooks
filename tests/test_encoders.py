@@ -41,6 +41,41 @@ def test_json_encoder_time_microsecond():
     items = encoder.default(datetime.time(16, 30, 01, 123456))
     assert items == '16:30:01.123'
 
+def test_json_encoder_time_tzinfo():
+    """ WebHooksJSONEncoder should work with times with timezone info.
+        ECMA-262 specifies that time zone offset can be like ZHH:mm, +HH:mm,
+        or -HH:mm. """
+    encoder = WebHooksJSONEncoder()
+    class GMT1(datetime.tzinfo):
+        def utcoffset(self, dt):
+            return datetime.timedelta(hours=1)
+        def dst(self, dt):
+            return datetime.timedelta(0)
+        def tzname(self,dt):
+            return "Europe/Prague"
+    items = encoder.default(datetime.time(16, 30, 01, tzinfo=GMT1()))
+    assert items == '16:30:01+01:00'
+
+def test_json_encoder_time_tzinfo_gmt():
+    """ WebHooksJSONEncoder should work with times with timezone info.
+        ECMA-262 specifies that time zone offset can be like ZHH:mm, +HH:mm,
+        or -HH:mm. """
+    encoder = WebHooksJSONEncoder()
+    class GMT(datetime.tzinfo):
+        def utcoffset(self, dt):
+            return datetime.timedelta(hours=0)
+        def dst(self, dt):
+            return datetime.timedelta(0)
+        def tzname(self,dt):
+            return "GMT"
+    items = encoder.default(datetime.time(16, 30, 01, tzinfo=GMT()))
+    
+    # This is what default() appears to want to do in lines 25-26, which fails
+    assert items == '16:30:01Z'
+
+    # Uncomment to make the test pass
+    # assert items == '16:30:01+00:00'
+
 # Integration tests
 
 def test_json_encoder_date_json():
