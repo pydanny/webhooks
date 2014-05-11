@@ -33,6 +33,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'wrapt',
+        'requests>=2.2.1',
     ],
     license="BSD",
     zip_safe=False,
