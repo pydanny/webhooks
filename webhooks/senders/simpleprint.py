@@ -32,7 +32,7 @@ WEBHOOKS = {
 ATTEMPTS = [0, 1, 2, 3, 4]
 
 
-def sender(wrapped, event, *args, **kwargs):
+def sender(wrapped, event, hash_value=None, *args, **kwargs):
     """
         This is the simplest sender callable I can create. It does 3 things:
 
@@ -67,8 +67,12 @@ def sender(wrapped, event, *args, **kwargs):
     # Create the payload by calling the hooked/wrapped function.
     payload = wrapped(*args, **kwargs)
 
+    # Add the hash value if there is one.
+    if hash_value is not None and len(hash_value) > 0:
+        payload['hash'] = hash_value
+
     # Dump the payload to json
-    payload = json.dumps(payload, cls=WebHooksJSONEncoder)
+    data = json.dumps(payload, cls=WebHooksJSONEncoder)
 
     # Get the target URL using just the event. In practice this would also use
     #   the creator argument as well.
@@ -82,7 +86,7 @@ def sender(wrapped, event, *args, **kwargs):
             "Attempt: {attempt}, {target_url}\n{payload}".format(
                 attempt=attempt,
                 target_url=target_url,
-                payload=payload
+                payload=data
             )
         )
 

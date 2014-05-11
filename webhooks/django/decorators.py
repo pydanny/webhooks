@@ -20,7 +20,7 @@ except ImportError:
     raise ImproperlyConfigured(msg)
 
 
-def hook(event, hash=True):
+def hook(event):
     @wrapt.decorator
     def wrapper(wrapped, instance, args, kwargs):
         """ This should calls the SenderClass, which can be defined by the sender.
