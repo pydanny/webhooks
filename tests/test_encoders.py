@@ -27,6 +27,20 @@ def test_json_encoder_datetime():
     items = encoder.default(datetime.datetime(2006, 11, 21, 16, 30))
     assert items == '2006-11-21T16:30:00'
 
+def test_json_encoder_time():
+    """ WebHooksJSONEncoder should work with times. """
+    encoder = WebHooksJSONEncoder()
+    items = encoder.default(datetime.time(16, 30))
+    assert items == '16:30:00'
+
+def test_json_encoder_time_microsecond():
+    """ WebHooksJSONEncoder should work with times with microsecond info.
+        ECMA-262 says, "sss is the number of complete milliseconds since the 
+        start of the second as three decimal digits." """
+    encoder = WebHooksJSONEncoder()
+    items = encoder.default(datetime.time(16, 30, 01, 123456))
+    assert items == '16:30:01.123'
+
 # Integration tests
 
 def test_json_encoder_date_json():
