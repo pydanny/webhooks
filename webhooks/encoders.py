@@ -31,6 +31,8 @@ class WebHooksJSONEncoder(json.JSONEncoder):
             r = o.isoformat()
             if o.microsecond:
                 r = r[:12]
+            if r.endswith('+00:00'):
+                r = r[:-6] + 'Z'
             return r
         elif isinstance(o, decimal.Decimal):
             return str(o)
