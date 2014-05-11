@@ -55,8 +55,7 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
 
         # anything with a 200 status code  is a success
         if r.status_code >= 200 and r.status_code < 300:
-            # Exit the sender function. We don't provide a return value as the
-            #   result of this should be tracked outside the current flow.
+            # Exit the sender function.  Here we provide the payload as a result.
             #   In practice, this means writing the result to a datastore.
             return payload
 
@@ -68,8 +67,7 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
     else:
         raise Exception("Could not send webhook")
 
-    # Exit the sender function. We don't provide a return value as the
-    #   result of this should be tracked outside the current flow.
+    # Exit the sender function.  Here we provide the payload as a result.
     #   In practice, this means writing the result to a datastore.
     #   TODO -log
     return payload

@@ -98,8 +98,7 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
 
         # anything with a 200 status code  is a success
         if r.status_code >= 200 and r.status_code < 300:
-            # Exit the sender function. We don't provide a return value as the
-            #   result of this should be tracked outside the current flow.
+            # Exit the sender function. For this we provide a payload result
             #   In practice, this means writing the result to a datastore.
             print("SUCCESS!!!")
             return payload
@@ -112,8 +111,7 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
         # Wait a bit before the next attempt
         sleep(attempt)
 
-    # Exit the sender function. We don't provide a return value besides the payload
-    #   as the result of this should be tracked outside the current flow.
+    # Exit the sender function. For this we provide a payload result
     #   In practice, this probably means writing the result to a datastore.
     print("FAILURE!!!")
     return payload

@@ -3,7 +3,8 @@ from django.core.exceptions import ImproperlyConfigured
 
 WEBHOOKS_SENDER = getattr(settings, "WEBHOOKS_SENDER", "webhooks.django.senders.sender")
 WEBHOOK_EVENTS = getattr(settings, "WEBHOOK_EVENTS", None)
-
+WEBHOOK_CREATOR_FIELD = getattr(settings, "WEBHOOK_CREATOR_FIELD", "username")
+WEBHOOK_ATTEMPTS = getattr(settings, "WEBHOOK_EVENTS", (0, 15, 30, 60))
 
 try:
     WEBHOOKS_SENDER_CALLABLE = __import__(WEBHOOKS_SENDER)

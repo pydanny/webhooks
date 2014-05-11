@@ -29,7 +29,10 @@ def event_choices():
 
 @python_2_unicode_compatible
 class Webhook(TimeStampedModel):
-    """ I would prefer the name 'target', but I worry it's confusing. """
+    """ I would prefer the name 'target', but I worry it's confusing.
+
+        TODO - make owner/event unique_together
+    """
 
     CONTENT_TYPE_JSON = CONTENT_TYPE_JSON
     CONTENT_TYPE_FORM = CONTENT_TYPE_FORM
@@ -42,7 +45,7 @@ class Webhook(TimeStampedModel):
 
     # TODO - add Webhook event choices as indivial attributes to this model, instantiated or not
 
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='webhooks')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='webhooks')
     event = models.CharField(max_length=255, choices=event_choices())
 
     url = models.URLField(max_length=255)
@@ -73,11 +76,12 @@ class Delivery(TimeStampedModel):
 
     success = models.BooleanField(default=False)
     attempt = models.IntegerField("How many times has this been attempted to be delivered")
+    hash_value = models.CharField(max_length=255, blank=True)
 
     # response info
     response_message = models.TextField("Whatever is sent back", blank=True)
     response_status = models.IntegerField("HTTP status code", blank=True, null=True)
-    response_content_type = models.CharField(max_length=255, blank=True, null=True)
+    response_content_type = models.CharField(max_length=255, blank=True)
 
     # TODO - add rest of recorded header infos
 
