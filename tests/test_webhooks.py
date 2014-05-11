@@ -43,9 +43,16 @@ def test_simpleprint_unhash():
 def test_targeted_hashed():
 
     @webhook(sender_callable=targeted.sender)
-    def basic(url="http://httpbin.org/post"):
+    def basic(url):
         return {"husband": "Daniel Roy Greenfeld", "wife": "Audrey Roy Greenfeld"}
 
+    status = basic(url="http://httpbin.org/post")
+
+    assert status['wife'] == "Audrey Roy Greenfeld"
+    assert status['husband'] == "Daniel Roy Greenfeld"
+    assert len(status['hash']) > 10
+
+    # no argument passed
     status = basic(url="http://httpbin.org/post")
 
     assert status['wife'] == "Audrey Roy Greenfeld"

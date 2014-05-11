@@ -16,12 +16,41 @@ Python + Webhooks Made Easy
 
 **WARNING** This project is in a pre-alpha state. It's not ready for use on ANYTHING.
 
+Existing Features
+------------------
+
+* Easy to integrate into any package or project
+* Comes with several built-in senders for synchronous webhooks.
+* Extendable functionality through the use of custom senders and hash functions.
+
 Planned Features
 -----------------
 
-* Easy to integrate into any package or project
-* Comes with numerous built-in senders for synchronous and asynchronous webhooks
+* Comes with numerous built-in senders for synchronous and asynchronous webhooks.
 * Special functions for combining multiple sends of identical payloads going to one target into one.
 * Follows http://resthooks.org patterns
 * Great documentation
 * Great tests
+
+Usage
+-----
+
+Follow these easy steps:
+
+1. Import the ``webhook`` decorator.
+2. Define a function that returns a JSON-serializable dictionary or iterable.
+3. Add the ``webhook`` decorator and pass in a ``sender_callable``.
+4, Call the function!
+
+Synchronous example (async examples to come soon):
+
+.. code-block:: python
+
+    from webhooks import webhook
+    from webhooks.senders import targeted
+
+    @webhook(sender_callable=targeted.sender)
+    def basic(url):
+        return {"husband": "Daniel Roy Greenfeld", "wife": "Audrey Roy Greenfeld"}
+
+    basic(url="http://httpbin.org/post")

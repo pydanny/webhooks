@@ -26,7 +26,9 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
     """
 
     # Get the URL from the kwargs
-    url = kwargs['url']
+    url = kwargs.get('url', None)
+    if url is None:
+        url = dkwargs['url']
 
     # Create the payload by calling the hooked/wrapped function.
     payload = wrapped(*args, **kwargs)
