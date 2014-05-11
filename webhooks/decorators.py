@@ -6,7 +6,7 @@ from functools import partial
 
 import wrapt
 
-from .hashes import basic_hash_function, placebo_hash_function
+from .hashes import basic_hash_function
 from .exceptions import SenderNotCallable
 
 __all__ = ("hook", "webhook", "unhashed_hook")
