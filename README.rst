@@ -50,7 +50,7 @@ Synchronous example (async examples to come soon):
     from webhooks.senders import targeted
 
     @webhook(sender_callable=targeted.sender)
-    def basic(url):
-        return {"husband": "Daniel Roy Greenfeld", "wife": "Audrey Roy Greenfeld"}
+    def basic(url, wife, husband):
+        return {"husband": husband, "wife": wife}
 
-    basic(url="http://httpbin.org/post")
+    basic(url="http://httpbin.org/post", "Danny", "Audrey")

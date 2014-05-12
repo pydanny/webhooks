@@ -25,17 +25,19 @@ def base_hook(sender_callable, hash_function, **dkwargs):
             raise SenderNotCallable(sender_callable)
 
         # Call the hash function and save result to a hash_value argument
+        hash_value = None
         if hash_function is not None:
-            kwargs['hash_value'] = hash_function()
+            hash_value = hash_function()
 
         ##################################
         # :wrapped: hooked function delivering a payload
-        # :event: name of the event being called
+        # :dkwargs: name of the event being called
+        # :hash_value: hash_value to determine the uniqueness of the payload
         # :args: Argument list for the wrapped function
         # :kwargs: Keyword arguments for the wrapped function. Must include 'creator'
 
         # Send the hooked function
-        status = sender_callable(wrapped, dkwargs, *args, **kwargs)
+        status = sender_callable(wrapped, dkwargs, hash_value, *args, **kwargs)
 
         # Status can be anything:
         #   * The result of a synchronous sender

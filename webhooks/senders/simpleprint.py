@@ -35,7 +35,7 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
 
             1. calls the hooked/wrapped function and transforms the response
                 into JSON.
-            2. Uses the event and creator arguments to find the right webhook.
+            2. Uses the event argument to find the right webhook.
                 A webhook being the target of the send.
             3. Sends the payload to the webhook target.
 
