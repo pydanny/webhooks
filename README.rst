@@ -54,3 +54,8 @@ Synchronous example (async examples to come soon):
         return {"husband": husband, "wife": wife}
 
     basic(url="http://httpbin.org/post", "Danny", "Audrey")
+    
+Projects Powered by Webhooks
+----------------------------
+
+* https://github.com/pydanny/dj-webhooks
