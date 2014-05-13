@@ -9,9 +9,6 @@ webhooks
    :alt: Build Status
    :target: https://travis-ci.org/pydanny/webhooks
 
-.. image:: https://coveralls.io/repos/pydanny/webhooks/badge.png
-  :target: https://coveralls.io/r/pydanny/webhooks
-
 .. image:: https://pypip.in/wheel/webhooks/badge.png
     :target: https://pypi.python.org/pypi/webhooks/
     :alt: Wheel Status
