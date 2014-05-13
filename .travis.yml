@@ -15,3 +15,6 @@ install: pip install -r dev-requirements.txt
 
 # command to run tests, e.g. python setup.py test
 script: make test
+
+# report coverage to coveralls.io
+after_success: coveralls
