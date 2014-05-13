@@ -9,6 +9,10 @@ webhooks
    :alt: Build Status
    :target: https://travis-ci.org/pydanny/webhooks
 
+.. image:: https://pypip.in/wheel/PYPI_PKG_NAME/badge.png
+    :target: https://pypi.python.org/pypi/PYPI_PKG_NAME/
+    :alt: Wheel Status
+
 Python + Webhooks Made Easy
 
 * Free software: BSD license
