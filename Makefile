@@ -35,6 +35,7 @@ test-all:
 
 coverage:
 	py.test --cov webhooks
+	coverage html
 	open htmlcov/index.html
 
 docs:

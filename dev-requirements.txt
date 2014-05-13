@@ -1,6 +1,7 @@
 # webhook dependencies
 wrapt>=1.8.0
 requests>=2.2.1
+rq>=0.4.5
 
 # Webhook test dependencies
 coverage

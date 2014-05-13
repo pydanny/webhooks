@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
 from time import sleep
 
 import requests
+from redis import Redis
+import rq
+from rq.decorators import job
 
 from ..encoders import WebHooksJSONEncoder
 
 
-# First element is 0 to represent the first attempt
-ATTEMPTS = [0, 1, 2, 3, 4]
+logging.basicConfig(filename="async.log", level=logging.DEBUG)
+
+connection = Redis()
+q = rq.Queue(connection=connection)
 
 
-def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
-    """
-        This is the simplest production-worthy callable I can create. It does 3 things:
+@job('default', connection=connection, timeout=5)
+def worker(wrapped, dkwargs, hash_value=None, *args, **kwargs):
 
-            1. calls the hooked/wrapped function and transforms the response
-                into JSON.
-            2. Uses the url argument as where to send the webhook.
-            3. Sends the payload to the target.
-
-        Note: Each line of code written in this function can be expanded on in
-        it's own function or method.
-    """
+    # First element is 0 to represent the first attempt
+    # TODO - pass this in as a decorator argument
+    ATTEMPTS = [0, 1, 2, 3, 4]
 
     # Get the URL from the kwargs
     url = kwargs.get('url', None)
@@ -40,21 +40,14 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
     # Dump the payload to json
     data = json.dumps(payload, cls=WebHooksJSONEncoder)
 
-    # Loop through the attempts and log each attempt
     for attempt in range(len(ATTEMPTS) - 1):
-
-        # Wait a bit before the next attempt
-        sleep(attempt)
-
-        # Print each attempt. In practice, this would either write to logs or
-        #   submit to a write-fast DB like Redis.
-        print(
-            "Attempt: {attempt}, {url}\n{payload}".format(
+        # Print each attempt. In practice, this would write to logs
+        msg = "Attempt: {attempt}, {url}\n{payload}".format(
                 attempt=attempt,
                 url=url,
                 payload=data
             )
-        )
+        logging.debug(msg)
 
         # post the payload
         r = requests.post(url, payload)
@@ -63,15 +56,24 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
         if r.status_code >= 200 and r.status_code < 300:
             # Exit the sender function.  Here we provide the payload as a result.
             #   In practice, this means writing the result to a datastore.
+            logging.debug("Success!")
             return payload
 
         # Log the current status of things and try again.
         # TODO - add logs
 
+        # Wait a bit before the next attempt
+        sleep(attempt)
     else:
-        raise Exception("Could not send webhook")
+        logging.debug("Could not send webhook")
 
-    # Exit the sender function.  Here we provide the payload as a result.
-    #   In practice, this means writing the result to a datastore.
-    #   TODO -log
+    # Exit the sender function.  Here we provide the payload as a result for
+    #   display when this function is run outside of the sender function.
     return payload
+
+
+def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
+
+    logging.debug("Starting async")
+    worker(wrapped, dkwargs, hash_value=None, *args, **kwargs)
+    logging.debug("Ending async")

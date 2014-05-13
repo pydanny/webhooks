@@ -83,6 +83,10 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
 
     # Loop through the attempts and log each attempt
     for attempt in range(len(ATTEMPTS) - 1):
+
+        # Wait a bit before the next attempt
+        sleep(attempt)
+
         # Print each attempt. In practice, this would either write to logs or
         #   submit to a write-fast DB like Redis.
         print(

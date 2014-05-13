@@ -9,6 +9,9 @@ webhooks
    :alt: Build Status
    :target: https://travis-ci.org/pydanny/webhooks
 
+.. image:: https://coveralls.io/repos/pydanny/webhooks/badge.png
+  :target: https://coveralls.io/r/pydanny/webhooks
+
 .. image:: https://pypip.in/wheel/webhooks/badge.png
     :target: https://pypi.python.org/pypi/webhooks/
     :alt: Wheel Status
@@ -34,12 +37,13 @@ Existing Features
 
 * Easy to integrate into any package or project
 * Comes with several built-in senders for synchronous webhooks.
+* Comes with a RedisQ-powered asynchronous webhook.
 * Extendable functionality through the use of custom senders and hash functions.
 
 Planned Features
 -----------------
 
-* Comes with numerous built-in senders for synchronous and asynchronous webhooks.
+* Comes with many built-in senders for synchronous and asynchronous webhooks.
 * Special functions for combining multiple sends of identical payloads going to one target into one.
 * Follows http://resthooks.org patterns
 * Great documentation
