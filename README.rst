@@ -16,6 +16,15 @@ Python + Webhooks Made Easy
 
 **WARNING** This project is in a pre-alpha state. It's not ready for use on ANYTHING.
 
+Python Versions
+----------------
+
+Currently works in:
+
+    * Python 2.7
+    * Python 3.3
+    * PyPy
+
 Existing Features
 ------------------
 

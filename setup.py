@@ -19,7 +19,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='webhooks',
-    version='0.1.0',
+    version='0.2.0',
     description='Python + Webhooks mMade Easy',
     long_description=readme + '\n\n' + history,
     author='Daniel Greenfeld',
