@@ -1,4 +1,4 @@
-from .base import Senderable
+from .base import Senderable, value_in
 
 ATTEMPTS = [0, 1, 2, 3]
 
@@ -8,11 +8,6 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
         wrapped, dkwargs, hash_value, ATTEMPTS, *args, **kwargs
     )
 
-    if "url" in kwargs:
-        senderobj.url = kwargs['url']
-    elif "url" in dkwargs:
-        senderobj.url = dkwargs['url']
-    else:
-        raise TypeError("sender_targeted needs a URL argument.")
+    senderobj.url = value_in("url", dkwargs, kwargs)
 
     return senderobj.send()

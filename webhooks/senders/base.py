@@ -107,3 +107,13 @@ class Senderable(object):
         # Exit the send method.  Here we provide the payload as a result for
         #   display when this method is run outside of asynchronous code.
         return payload
+
+
+def value_in(key, dkwargs, kwargs):
+    if key in kwargs:
+        return kwargs[key]
+    elif key in dkwargs:
+        return dkwargs[key]
+    else:
+        msg = "Sender function needs a %s argument" % key
+        raise TypeError(msg)
