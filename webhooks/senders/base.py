@@ -71,8 +71,12 @@ class Senderable(object):
     def _send(self):
         """ Send the webhook method """
 
+        payload = self.payload
+        payload['url'] = self.url
+
         for attempt in range(len(self.attempts) - 1):
             # Print each attempt. In practice, this would write to logs
+
             msg = "Attempt: {attempt}, {url}\n{payload}".format(
                     attempt=attempt + 1,
                     url=self.url,
@@ -80,15 +84,20 @@ class Senderable(object):
                 )
             self.notify(msg)
 
+            payload['attempt'] = attempt + 1
+
             # post the payload
             r = requests.post(self.url, self.payload)
+
+            payload['status_code'] = r.status_code
 
             # anything with a 200 status code  is a success
             if r.status_code >= 200 and r.status_code < 300:
                 # Exit the sender method.  Here we provide the payload as a result.
                 #   This is useful for reporting.
                 self.notify("Successfully sent webhook {}".format(self.hash_value))
-                return self.payload
+                payload['response'] = r.content
+                return payload
 
             # Wait a bit before the next attempt
             sleep(attempt)
@@ -97,4 +106,4 @@ class Senderable(object):
 
         # Exit the send method.  Here we provide the payload as a result for
         #   display when this method is run outside of asynchronous code.
-        return self.payload
+        return payload

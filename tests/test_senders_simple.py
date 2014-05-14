@@ -8,13 +8,13 @@ test_webhooks
 Tests for `webhooks` module.
 """
 
-from webhooks import webhook
-from webhooks.senders import simple
+from webhooks import webhook, unhashed_hook
+from webhooks.senders.simple import sender
 
 
-def test_simpleprint_hashed():
+def test_simple_hashed():
 
-    @webhook(event="example200", sender_callable=simple.sender)
+    @webhook(event="example200", sender_callable=sender)
     def basic(wife, husband, creator):
         return {"husband": husband, "wife": wife}
 
@@ -24,3 +24,16 @@ def test_simpleprint_hashed():
     assert status['husband'] == "Daniel Roy Greenfeld"
     assert "creator" not in status
     assert len(status['hash']) > 10
+
+
+def test_simple_unhash():
+
+    @unhashed_hook(event="example200", sender_callable=sender)
+    def basic(wife, husband, creator):
+        return {"husband": husband, "wife": wife}
+
+    status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", creator="pydanny")
+
+    assert status['wife'] == "Audrey Roy Greenfeld"
+    assert status['husband'] == "Daniel Roy Greenfeld"
+    assert "hash" not in status

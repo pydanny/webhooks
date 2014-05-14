@@ -10,3 +10,4 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
         wrapped, dkwargs, hash_value, ATTEMPTS, *args, **kwargs
     )
     return senderobj.send()
+
