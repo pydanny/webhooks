@@ -43,7 +43,7 @@ def worker(wrapped, dkwargs, hash_value=None, *args, **kwargs):
     for attempt in range(len(ATTEMPTS) - 1):
         # Print each attempt. In practice, this would write to logs
         msg = "Attempt: {attempt}, {url}\n{payload}".format(
-                attempt=attempt,
+                attempt=attempt + 1,
                 url=url,
                 payload=data
             )
@@ -76,4 +76,5 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
 
     logging.debug("Starting async")
     worker(wrapped, dkwargs, hash_value=None, *args, **kwargs)
+    worker.delay
     logging.debug("Ending async")

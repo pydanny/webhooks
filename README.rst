@@ -5,6 +5,9 @@ webhooks
 .. image:: https://pypip.in/d/webhooks/badge.png
         :target: https://pypi.python.org/pypi/webhooks
 
+.. image:: https://badge.fury.io/py/webhooks.png
+    :target: https://badge.fury.io/py/webhooks
+
 .. image:: https://travis-ci.org/pydanny/webhooks.png
    :alt: Build Status
    :target: https://travis-ci.org/pydanny/webhooks

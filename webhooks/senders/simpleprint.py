@@ -91,7 +91,7 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
         #   submit to a write-fast DB like Redis.
         print(
             "Attempt: {attempt}, {target_url}\n{payload}".format(
-                attempt=attempt,
+                attempt=attempt + 1,
                 target_url=target_url,
                 payload=data
             )
