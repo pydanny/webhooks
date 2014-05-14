@@ -3,13 +3,12 @@
 History
 -------
 
-0.3.0 (2014-05-??)
+0.3.0 (2014-05-14)
 ++++++++++++++++++
 
 * Added extensible Senderable class to expedite creating new senders.
 * Added async_redis sender
 * Added travis-ci
-
 
 0.2.0 (2014-05-13)
 ++++++++++++++++++

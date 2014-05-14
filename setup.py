@@ -10,8 +10,12 @@ try:
 except ImportError:
     from distutils.core import setup
 
+version = "0.3.0"
+
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist bdist_wheel upload')
+    print("  git tag -a %s -m 'version %s'" % (version, version))
+    print("  git push --tags")
     sys.exit()
 
 readme = open('README.rst').read()
@@ -19,7 +23,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='webhooks',
-    version='0.2.0',
+    version=version,
     description='Python + Webhooks mMade Easy',
     long_description=readme + '\n\n' + history,
     author='Daniel Greenfeld',
