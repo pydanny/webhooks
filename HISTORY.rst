@@ -3,6 +3,12 @@
 History
 -------
 
+0.3.1 (2014-05-??)
+++++++++++++++++++
+
+* Added more Senderable attributes to make it easier to track what's going on
+
+
 0.3.0 (2014-05-14)
 ++++++++++++++++++
 

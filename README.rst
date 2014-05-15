@@ -30,7 +30,6 @@ Currently works in:
 
     * Python 2.7
     * Python 3.3
-    * PyPy
 
 Existing Features
 ------------------
@@ -47,7 +46,7 @@ Planned Features
 * Special functions for combining multiple sends of identical payloads going to one target into one.
 * Follows http://resthooks.org patterns
 * Great documentation
-* Great tests
+* Compatibility with PyPy
 
 Usage
 -----

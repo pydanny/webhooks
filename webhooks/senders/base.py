@@ -100,6 +100,7 @@ class Senderable(object):
             if r.status_code >= 200 and r.status_code < 300:
                 # Exit the sender method.  Here we provide the payload as a result.
                 #   This is useful for reporting.
+                self.success = True
                 self.notify("Successfully sent webhook {}".format(self.hash_value))
                 payload['response'] = r.content
                 return payload
@@ -107,6 +108,7 @@ class Senderable(object):
             # Wait a bit before the next attempt
             sleep(wait)
         else:
+            self.success = False
             self.notify("Could not send webhook {}".format(self.hash_value))
 
         # Exit the send method.  Here we provide the payload as a result for
