@@ -81,13 +81,6 @@ class Senderable(object):
 
             self.attempt = i + 1
 
-            msg = "Attempt: {attempt}, {url}\n{payload}".format(
-                    attempt=self.attempt,
-                    url=self.url,
-                    payload=self.jsonified_payload
-                )
-            self.notify(msg)
-
             payload['attempt'] = self.attempt
 
             # post the payload
@@ -101,18 +94,20 @@ class Senderable(object):
                 # Exit the sender method.  Here we provide the payload as a result.
                 #   This is useful for reporting.
                 self.success = True
-                self.notify("Successfully sent webhook {}".format(self.hash_value))
+                self.notify("Attempt {}: Successfully sent webhook {}".format(
+                    self.attempt, self.hash_value)
+                )
                 payload['response'] = r.content
-                return payload
+                break
+
+            self.notify("Attempt {}: Could not send webhook {}".format(
+                    self.attempt, self.hash_value)
+            )
 
             # Wait a bit before the next attempt
             sleep(wait)
-        else:
-            self.success = False
-            self.notify("Could not send webhook {}".format(self.hash_value))
 
-        # Exit the send method.  Here we provide the payload as a result for
-        #   display when this method is run outside of asynchronous code.
+        # Exit the send method.  Here we provide the payload as a result.
         return payload
 
 
