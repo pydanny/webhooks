@@ -26,6 +26,9 @@ class Senderable(object):
         self.attempts = attempts
         self.args = args
         self.kwargs = kwargs
+        self.attempt = 0
+        self.success = False
+        self.response = None
 
     @cached_property
     def url(self):
@@ -74,20 +77,22 @@ class Senderable(object):
         payload = self.payload
         payload['url'] = self.url
 
-        for attempt in range(len(self.attempts) - 1):
-            # Print each attempt. In practice, this would write to logs
+        for i, wait in enumerate(range(len(self.attempts) - 1)):
+
+            self.attempt = i + 1
 
             msg = "Attempt: {attempt}, {url}\n{payload}".format(
-                    attempt=attempt + 1,
+                    attempt=self.attempt,
                     url=self.url,
                     payload=self.jsonified_payload
                 )
             self.notify(msg)
 
-            payload['attempt'] = attempt + 1
+            payload['attempt'] = self.attempt
 
             # post the payload
             r = requests.post(self.url, self.payload)
+            self.response = r
 
             payload['status_code'] = r.status_code
 
@@ -100,7 +105,7 @@ class Senderable(object):
                 return payload
 
             # Wait a bit before the next attempt
-            sleep(attempt)
+            sleep(wait)
         else:
             self.notify("Could not send webhook {}".format(self.hash_value))
 
