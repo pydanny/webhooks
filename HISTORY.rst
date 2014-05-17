@@ -3,7 +3,13 @@
 History
 -------
 
-0.3.1 (2014-05-15
+0.3.2 (2014-05-??)
+++++++++++++++++++
+
+* Brought in simplified cached_property decorator
+
+
+0.3.1 (2014-05-15)
 ++++++++++++++++++
 
 * Added more Senderable attributes to make it easier to track what's going on.
