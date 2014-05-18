@@ -6,7 +6,7 @@ from time import sleep
 
 import requests
 
-from ..decorators import cached_property
+from cached_property import cached_property
 from ..encoders import WebHooksJSONEncoder
 
 
