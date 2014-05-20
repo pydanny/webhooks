@@ -2,6 +2,7 @@
 """
 Where the hook function/decorator is stored
 """
+from __future__ import absolute_import
 from functools import partial
 
 import wrapt

@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from rq.decorators import job
 
 from .base import Senderable, value_in

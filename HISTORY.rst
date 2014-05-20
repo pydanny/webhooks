@@ -3,6 +3,12 @@
 History
 -------
 
+0.4.0 (2014-05-20)
+++++++++++++++++++
+
+* Replaced `utils.encoders` with `json262` package.
+* utf-8 encoding everywhere
+
 0.3.2 (2014-05-17)
 ++++++++++++++++++
 

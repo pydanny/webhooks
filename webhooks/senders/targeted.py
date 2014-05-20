@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
 from .base import Senderable, value_in
 
 ATTEMPTS = [0, 1, 2, 3]

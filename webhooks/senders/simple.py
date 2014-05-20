@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
 from .base import Senderable
 
 # First element is 0 to represent the first attempt

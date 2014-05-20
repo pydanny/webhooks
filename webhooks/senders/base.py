@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 import json
 import logging
 from time import sleep
 
-import requests
-
 from cached_property import cached_property
-from ..encoders import WebHooksJSONEncoder
+from json262 import JSON262Encoder
+import requests
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -62,7 +62,7 @@ class Senderable(object):
 
     def get_jsonified_payload(self):
         """ Dump the payload to JSON """
-        return json.dumps(self.payload, cls=WebHooksJSONEncoder)
+        return json.dumps(self.payload, cls=JSON262Encoder)
 
     def notify(self, message):
         logging.debug(message)

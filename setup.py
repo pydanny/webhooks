@@ -10,7 +10,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-version = "0.3.2"
+version = "0.4.0"
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist bdist_wheel upload')
@@ -37,15 +37,16 @@ setup(
                  'webhooks'},
     include_package_data=True,
     install_requires=[
-        'wrapt',
+        'cached-property>=0.1.2',
+        'json262==0.2.0',
         'requests>=2.2.1',
-        'cached-property>=0.1.2'
+        'wrapt'
     ],
     license="BSD",
     zip_safe=False,
     keywords='webhooks',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
