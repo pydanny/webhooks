@@ -8,6 +8,7 @@ History
 
 * Replaced `utils.encoders` with `json262` package.
 * utf-8 encoding everywhere
+* Add `from __future__ import absolute_import` everywhere.
 
 0.3.2 (2014-05-17)
 ++++++++++++++++++
