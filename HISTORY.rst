@@ -6,19 +6,19 @@ History
 0.4.1 (2014-05-22)
 +++++++++++++++++++
 
-* Replaced `json262` with `standardjson` package
+* Replaced `json262` with `standardjson` package.
 
 0.4.0 (2014-05-20)
 ++++++++++++++++++
 
 * Replaced `utils.encoders` with `json262` package.
 * utf-8 encoding everywhere
-* Add `from __future__ import absolute_import` everywhere.
+* Add `from `__future__ import absolute_import` everywhere.
 
 0.3.2 (2014-05-17)
 ++++++++++++++++++
 
-* Brought in simplified cached_property decorator
+* Brought in simplified `cached_property` decorator
 
 
 0.3.1 (2014-05-15)

@@ -10,7 +10,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-version = "0.4.0"
+version = "0.4.1"
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist bdist_wheel upload')
