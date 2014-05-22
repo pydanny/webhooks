@@ -38,8 +38,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'cached-property>=0.1.2',
-        'json262==0.2.0',
-        'requests>=2.2.1',
+        'standardjson>=0.3.1',
+        'requests>=2.0',
         'wrapt'
     ],
     license="BSD",

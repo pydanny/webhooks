@@ -6,7 +6,7 @@ import logging
 from time import sleep
 
 from cached_property import cached_property
-from json262 import JSON262Encoder
+from standardjson import StandardJSONEncoder
 import requests
 
 
@@ -62,7 +62,7 @@ class Senderable(object):
 
     def get_jsonified_payload(self):
         """ Dump the payload to JSON """
-        return json.dumps(self.payload, cls=JSON262Encoder)
+        return json.dumps(self.payload, cls=StandardJSONEncoder)
 
     def notify(self, message):
         logging.debug(message)
