@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 import json
 import logging
+import sys
 from time import sleep
 
 from cached_property import cached_property
@@ -84,20 +85,24 @@ class Senderable(object):
             payload['attempt'] = self.attempt
 
             # post the payload
-            r = requests.post(self.url, self.payload)
-            self.response = r
+            self.response = requests.post(self.url, self.payload)
+            if sys.version > '3':
+                # Converts bytes object to str object in Python 3+
+                self.response_content = self.response.content.decode('utf-8')
+            else:
+                self.response_content = self.response.content
 
-            payload['status_code'] = r.status_code
+            payload['status_code'] = self.response.status_code
 
             # anything with a 200 status code  is a success
-            if r.status_code >= 200 and r.status_code < 300:
+            if self.response.status_code >= 200 and self.response.status_code < 300:
                 # Exit the sender method.  Here we provide the payload as a result.
                 #   This is useful for reporting.
                 self.success = True
                 self.notify("Attempt {}: Successfully sent webhook {}".format(
                     self.attempt, self.hash_value)
                 )
-                payload['response'] = r.content
+                payload['response'] = self.response_content
                 break
 
             self.notify("Attempt {}: Could not send webhook {}".format(

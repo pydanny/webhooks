@@ -3,6 +3,11 @@
 History
 -------
 
+0.4.2 (2014-05-22)
++++++++++++++++++++
+
+* Convert python-requests bytes to string when using Python 3
+
 0.4.1 (2014-05-22)
 +++++++++++++++++++
 
