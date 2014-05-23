@@ -21,7 +21,7 @@ Python + Webhooks Made Easy
 * Free software: BSD license
 * Documentation: http://webhooks.rtfd.org.
 
-**WARNING** This project is in a pre-alpha state. It's not ready for use on ANYTHING.
+**WARNING** This project is in a beta state. It's still undergoing some changes and documentation is in-progress.
 
 Python Versions
 ----------------
