@@ -11,5 +11,4 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
     )
 
     senderobj.url = value_in("url", dkwargs, kwargs)
-
     return senderobj.send()
