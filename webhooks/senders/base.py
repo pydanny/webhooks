@@ -93,6 +93,9 @@ class Senderable(object):
     def notify(self, message):
         logging.info(message)
 
+    def notify_error(self, message):
+        logging.error(message)
+
     def send(self):
         """ Wrapper around _send method for use with asynchronous coding. """
         return self._send()
@@ -119,6 +122,7 @@ class Senderable(object):
             except Exception as ex:
                 payload['response'] = '{"status_code": 500, "status":"failure","error":"'+str(ex).replace('"',"'")+'"}'
                 skip_response = True
+                success = False
 
             if not skip_response:
                 if sys.version > '3':
@@ -143,12 +147,18 @@ class Senderable(object):
             self.notify("Attempt {}: Could not send webhook {}".format(
                     self.attempt, self.hash_value)
             )
-            self.notify_debug("Webhook {} body: {}".format(
+            self.notify_debug("Webhook {}. Body: {}".format(
                     self.hash_value, self.payload)
             )
 
-            # Wait a bit before the next attempt
-            sleep(wait)
+            # If last attempt
+            if self.attempt == (len(self.attempts) - 1):
+                self.notify_error("Failed to send webhook {}. Body: {}".format(
+                    self.hash_value, self.payload)
+                )
+            else:
+                # Wait a bit before the next attempt
+                sleep(wait)
 
         # Exit the send method.  Here we provide the payload as a result.
         return payload

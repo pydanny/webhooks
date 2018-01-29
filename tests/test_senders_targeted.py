@@ -14,6 +14,7 @@ class SendersTargetedCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.test_server = test_base.start_test_server()
+        test_base.configure_debug_logging()
 
     @classmethod
     def tearDownClass(cls):
@@ -47,4 +48,5 @@ class SendersTargetedCase(unittest.TestCase):
         assert len(status['hash']) > 10
 
 if __name__ == '__main__':
+
     unittest.main()
