@@ -87,9 +87,11 @@ class Senderable(object):
         """ Dump the payload to JSON """
         return json.dumps(self.payload, cls=StandardJSONEncoder)
 
-    def notify(self, message):
-        print(message)
+    def notify_debug(self, message):
         logging.debug(message)
+
+    def notify(self, message):
+        logging.info(message)
 
     def send(self):
         """ Wrapper around _send method for use with asynchronous coding. """
@@ -140,6 +142,9 @@ class Senderable(object):
 
             self.notify("Attempt {}: Could not send webhook {}".format(
                     self.attempt, self.hash_value)
+            )
+            self.notify_debug("Webhook {} body: {}".format(
+                    self.hash_value, self.payload)
             )
 
             # Wait a bit before the next attempt
