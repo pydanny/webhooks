@@ -161,6 +161,9 @@ def _value_in(key, required, dkwargs, kwargs):
 def value_in(key, dkwargs, kwargs):
     return _value_in(key, True, dkwargs, kwargs)
 
+def value_in_opt(key, required, dkwargs, kwargs):
+    return _value_in(key, required, dkwargs, kwargs)
+
 
 class EncodingType(object):
     JSON = 'application/x-www-form-urlencoded'
