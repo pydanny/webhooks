@@ -28,6 +28,7 @@ class Senderable(object):
         self.kwargs = kwargs
         self.attempt = 0
         self.success = False
+        self.error = None
         self.response = None
 
     @staticmethod
@@ -119,12 +120,7 @@ class Senderable(object):
             post_attributes[encoding_key] = self.format_payload()
             try:
                 self.response = requests.post(self.url, **post_attributes)
-            except Exception as ex:
-                payload['response'] = '{"status_code": 500, "status":"failure","error":"'+str(ex).replace('"',"'")+'"}'
-                skip_response = True
-                success = False
 
-            if not skip_response:
                 if sys.version > '3':
                     # Converts bytes object to str object in Python 3+
                     self.response_content = self.response.content.decode('utf-8')
@@ -137,12 +133,19 @@ class Senderable(object):
                 if self.response.status_code >= 200 and self.response.status_code < 300:
                     # Exit the sender method.  Here we provide the payload as a result.
                     #   This is useful for reporting.
-                    self.success = True
                     self.notify("Attempt {}: Successfully sent webhook {}".format(
                         self.attempt, self.hash_value)
                     )
                     payload['response'] = self.response_content
+                    self.success = True
                     break
+                else:
+                    self.error = "Status code %d".format(self.response.status_code)
+
+            except Exception as ex:
+                err_formatted = str(ex).replace('"',"'")
+                payload['response'] = '{"status_code": 500, "status":"failure","error":"'+err_formatted+'"}'
+                self.error = err_formatted
 
             self.notify("Attempt {}: Could not send webhook {}".format(
                     self.attempt, self.hash_value)
@@ -160,7 +163,8 @@ class Senderable(object):
                 # Wait a bit before the next attempt
                 sleep(wait)
 
-        # Exit the send method.  Here we provide the payload as a result.
+        payload['success'] = self.success
+        payload['error'] = None if self.success or not self.error else self.error
         return payload
 
 def _value_in(key, required, dkwargs, kwargs):

@@ -27,25 +27,28 @@ class SendersTargetedCase(unittest.TestCase):
         def basic(wife, husband, url, encoding):
             return {"husband": husband, "wife": wife}
 
-        status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", url="http://localhost:5000/webhook", encoding=encoding)
+        status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", url="http://localhost:5001/webhook", encoding=encoding)
 
         assert status['wife'] == "Audrey Roy Greenfeld"
         assert status['husband'] == "Daniel Roy Greenfeld"
         assert len(status['hash']) > 10
 
-    @data({'timeout': 5, 'expected_success': True}, {'timeout': 0.010, 'expected_success': False})
+    @data({'timeout': 10, 'expected_success': True}, {'timeout': 0.010, 'expected_success': False})
     def test_timeout(self, params):
 
         @webhook(sender_callable=targeted.sender)
         def basic(wife, husband, url, encoding, timeout):
             return {"husband": husband, "wife": wife}
 
-        status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", url="http://localhost:5000/webhook", encoding="application/json", timeout=params['timeout'])
-        print(status['response'])
-        assert (json.loads(status['response'])['status'] == 'success' if params['expected_success'] else json.loads(status['response'])['status'] != 'success')
-        assert status['wife'] == "Audrey Roy Greenfeld"
-        assert status['husband'] == "Daniel Roy Greenfeld"
-        assert len(status['hash']) > 10
+        response = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", url="http://localhost:5001/webhook", encoding="application/json", timeout=params['timeout'])
+        print(response['response'])
+        assert (response['success'] if params['expected_success'] else not response['success'])
+        assert (not response['error'] if params['expected_success'] else response['error'])
+        assert response['wife'] == "Audrey Roy Greenfeld"
+        assert response['husband'] == "Daniel Roy Greenfeld"
+        assert len(response['hash']) > 10
+
+
 
 if __name__ == '__main__':
 
