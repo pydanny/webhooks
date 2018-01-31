@@ -52,7 +52,7 @@ if __name__ == '__main__':
         token = temp_token()
         print('Token: %s' % token)
         WEBHOOK_VERIFY_TOKEN = token
-    app.run()
+    app.run(port=5001)
 
 
 
