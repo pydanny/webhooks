@@ -140,7 +140,7 @@ class Senderable(object):
                     self.success = True
                     break
                 else:
-                    self.error = "Status code %d".format(self.response.status_code)
+                    self.error = "Status code {}".format(self.response.status_code)
 
             except Exception as ex:
                 err_formatted = str(ex).replace('"',"'")
