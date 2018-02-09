@@ -38,7 +38,7 @@ def webhook():
             else:
                 print(request.data)
                 return jsonify({'status':'success' \
-                                   , 'received_data: ' : request.data
+                                   , 'received_data: ' : request.data.decode('utf-8')
                                 }), 200
         else:
             return jsonify({'status':'not authorised'}), 401
