@@ -37,7 +37,9 @@ class SendersTargetedCase(unittest.TestCase):
 
     @data({'timeout': 10, 'expected_success': True}, {'timeout': 0.010, 'expected_success': False})
     def test_timeout(self, params):
-
+        from subprocess import Popen
+        import os
+        test_server = Popen(["python", os.path.join(os.path.dirname(__file__), "test_server.py")])
         @webhook(sender_callable=targeted.sender)
         def basic(wife, husband, url, encoding, timeout):
             return {"husband": husband, "wife": wife}
