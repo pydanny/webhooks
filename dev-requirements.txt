@@ -10,3 +10,5 @@ coverage
 pytest
 pytest-cov
 flask
+ddt
+unittest
