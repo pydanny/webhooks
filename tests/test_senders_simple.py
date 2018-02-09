@@ -15,10 +15,10 @@ from webhooks.senders.simple import sender
 def test_simple_hashed():
 
     @webhook(event="example200", sender_callable=sender)
-    def basic(wife, husband, creator):
+    def basic(wife, husband, creator, encoding):
         return {"husband": husband, "wife": wife}
 
-    status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", creator="pydanny")
+    status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", creator="pydanny", encoding="application/json")
 
     assert status['wife'] == "Audrey Roy Greenfeld"
     assert status['husband'] == "Daniel Roy Greenfeld"
@@ -29,10 +29,10 @@ def test_simple_hashed():
 def test_simple_unhash():
 
     @unhashed_hook(event="example200", sender_callable=sender)
-    def basic(wife, husband, creator):
+    def basic(wife, husband, creator, encoding):
         return {"husband": husband, "wife": wife}
 
-    status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", creator="pydanny")
+    status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", creator="pydanny", encoding="application/json")
 
     assert status['wife'] == "Audrey Roy Greenfeld"
     assert status['husband'] == "Daniel Roy Greenfeld"
