@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import pytest
 import unittest
 from webhooks import webhook
 from webhooks.senders import targeted
-import test_base
+from tests import test_base
 import json
 from ddt import ddt, data
 
@@ -12,13 +13,14 @@ from ddt import ddt, data
 class SendersTargetedCase(unittest.TestCase):
 
     @classmethod
-    def setUpClass(cls):
-        cls.test_server = test_base.start_test_server()
+    def setup_class(cls):
         test_base.configure_debug_logging()
+        cls.test_server = test_base.start_test_server()
 
     @classmethod
-    def tearDownClass(cls):
-        test_base.end_test_server(cls.test_server)
+    def setup_class(cls):
+        #test_base.end_test_server(cls.test_server)
+        pass
 
     @data("application/x-www-form-urlencoded", "application/json")
     def test_encoding(self, encoding):
@@ -35,7 +37,9 @@ class SendersTargetedCase(unittest.TestCase):
 
     @data({'timeout': 10, 'expected_success': True}, {'timeout': 0.010, 'expected_success': False})
     def test_timeout(self, params):
-
+        from subprocess import Popen
+        import os
+        test_server = Popen(["python", os.path.join(os.path.dirname(__file__), "test_server.py")])
         @webhook(sender_callable=targeted.sender)
         def basic(wife, husband, url, encoding, timeout):
             return {"husband": husband, "wife": wife}

@@ -31,6 +31,8 @@ def webhook():
 
     elif request.method == 'POST':
         client = request.remote_addr
+        print('authentication:')
+        print(request.headers.get('Basic',None))
         if not check_auth or client in authorized_clients:
             if check_auth and datetime.now() - authorized_clients.get(client) > timedelta(hours=CLIENT_AUTH_TIMEOUT):
                 authorized_clients.pop(client)
@@ -38,7 +40,7 @@ def webhook():
             else:
                 print(request.data)
                 return jsonify({'status':'success' \
-                                   , 'received_data: ' : request.data
+                                   , 'received_data: ' : request.data.decode('utf-8')
                                 }), 200
         else:
             return jsonify({'status':'not authorised'}), 401

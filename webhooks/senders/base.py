@@ -5,6 +5,8 @@ import json
 import logging
 import sys
 from time import sleep
+from Crypto.Hash import SHA256
+from urllib import urlencode
 
 from cached_property import cached_property
 from standardjson import StandardJSONEncoder
@@ -27,7 +29,6 @@ class Senderable(object):
         self.args = args
         self.kwargs = kwargs
         self.attempt = 0
-        self.success = False
         self.error = None
         self.response = None
 
@@ -40,7 +41,21 @@ class Senderable(object):
         return self.get_url()
 
     def get_url(self):
-        return "http://httpbin.org/post"
+        return _value_in('url', True, kwargs=self.kwargs, dkwargs=self.dkwargs)
+
+    @cached_property
+    def custom_headers(self):
+        return self.get_custom_headers()
+
+    def get_custom_headers(self):
+        return _value_in('custom_headers', False, kwargs=self.kwargs, dkwargs=self.dkwargs)
+
+    @cached_property
+    def signing_secret(self):
+        return self.get_signing_secret()
+
+    def get_signing_secret(self):
+        return _value_in('signing_secret', False, kwargs=self.kwargs, dkwargs=self.dkwargs)
 
     @cached_property
     def encoding(self):
@@ -105,20 +120,28 @@ class Senderable(object):
         """ Send the webhook method """
 
         payload = self.payload
-        payload['url'] = self.url
+        sending_metadata = {'success': False}
+        post_attributes = {'timeout': self.timeout}
+
+        if self.custom_headers:
+            post_attributes['headers'] = self.custom_headers
+
+        encoding_key = 'json' if self.encoding == EncodingType.JSON else 'data'
+        post_attributes[encoding_key] = self.format_payload()
+
+        if self.signing_secret:
+            if not post_attributes.get('headers', None):
+                post_attributes['headers'] = {}
+            post_attributes['headers']['x-hub-signature'] = self.create_signature(post_attributes[encoding_key], \
+                                                                                  self.signing_secret)
 
         for i, wait in enumerate(range(len(self.attempts) - 1)):
 
             self.attempt = i + 1
+            sending_metadata['attempt'] = self.attempt
 
-            payload['attempt'] = self.attempt
-
-            # post the payload
-            skip_response = False
-            post_attributes = {'timeout' : self.timeout}
-            encoding_key = 'json' if self.encoding == EncodingType.JSON else 'data'
-            post_attributes[encoding_key] = self.format_payload()
             try:
+                print(self.url)
                 self.response = requests.post(self.url, **post_attributes)
 
                 if sys.version > '3':
@@ -127,7 +150,7 @@ class Senderable(object):
                 else:
                     self.response_content = self.response.content
 
-                payload['status_code'] = self.response.status_code
+                sending_metadata['status_code'] = self.response.status_code
 
                 # anything with a 200 status code  is a success
                 if self.response.status_code >= 200 and self.response.status_code < 300:
@@ -136,15 +159,15 @@ class Senderable(object):
                     self.notify("Attempt {}: Successfully sent webhook {}".format(
                         self.attempt, self.hash_value)
                     )
-                    payload['response'] = self.response_content
-                    self.success = True
+                    sending_metadata['response'] = self.response_content
+                    sending_metadata['success'] = True
                     break
                 else:
                     self.error = "Status code {}".format(self.response.status_code)
 
             except Exception as ex:
                 err_formatted = str(ex).replace('"',"'")
-                payload['response'] = '{"status_code": 500, "status":"failure","error":"'+err_formatted+'"}'
+                sending_metadata['response'] = '{"status_code": 500, "status":"failure","error":"'+err_formatted+'"}'
                 self.error = err_formatted
 
             self.notify("Attempt {}: Could not send webhook {}".format(
@@ -163,9 +186,19 @@ class Senderable(object):
                 # Wait a bit before the next attempt
                 sleep(wait)
 
-        payload['success'] = self.success
-        payload['error'] = None if self.success or not self.error else self.error
-        return payload
+        sending_metadata['error'] = None if sending_metadata['success'] or not self.error else self.error
+        sending_metadata['post_attributes'] = post_attributes
+        merged_dict = sending_metadata.copy()
+        merged_dict.update(payload)
+        return merged_dict
+
+    def create_signature(self, payload, secret):
+        if not isinstance(payload,basestring):
+            # Data will be forms encoded
+            payload = requests.PreparedRequest()._encode_params(payload)
+        hmac = SHA256.new(secret)
+        hmac.update(payload)
+        return 'sha256=' + hmac.hexdigest()
 
 def _value_in(key, required, dkwargs, kwargs):
     if key in kwargs:
@@ -180,10 +213,10 @@ def _value_in(key, required, dkwargs, kwargs):
 def value_in(key, dkwargs, kwargs):
     return _value_in(key, True, dkwargs, kwargs)
 
-def value_in_opt(key, required, dkwargs, kwargs):
-    return _value_in(key, required, dkwargs, kwargs)
+def value_in_opt(key, dkwargs, kwargs):
+    return _value_in(key, False, dkwargs, kwargs)
 
 
 class EncodingType(object):
-    JSON = 'application/x-www-form-urlencoded'
-    FORMS = 'application/json'
+    FORMS = 'application/x-www-form-urlencoded'
+    JSON = 'application/json'
