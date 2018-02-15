@@ -101,6 +101,9 @@ class Senderable(object):
 
     def jsonify_payload(self):
         """ Dump the payload to JSON """
+        # Assume already json serialized
+        if isinstance(self.payload, basestring):
+            return self.payload
         return json.dumps(self.payload, cls=StandardJSONEncoder)
 
     def notify_debug(self, message):
