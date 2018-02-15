@@ -16,7 +16,7 @@ def sender(wrapped, dkwargs, hash_value=None, *args, **kwargs):
 
     senderobj.url = value_in("url", dkwargs, kwargs)
     connection = value_in("connection", dkwargs, kwargs)
-    redis_timeout = value_in_opt("redis_timeout", False, dkwargs, kwargs)
+    redis_timeout = value_in_opt("redis_timeout", dkwargs, kwargs)
 
     @job('default', connection=connection, timeout=redis_timeout)
     def worker(senderobj):
