@@ -79,11 +79,7 @@ class Senderable(object):
         return self.get_payload()
 
     def get_payload(self):
-        """
-            1. Create the payload by calling the hooked/wrapped function
-            2. Add the hash_value if there is one.
 
-        """
         # Create the payload by calling the hooked/wrapped function.
         payload = self.wrapped(*self.args, **self.kwargs)
 
@@ -119,17 +115,17 @@ class Senderable(object):
 
         payload = self.payload
         sending_metadata = {'success': False}
-        post_attributes = {'timeout': self.timeout, 'Content-Type': self.encoding}
+        post_attributes = {'timeout': self.timeout}
 
         if self.custom_headers:
             post_attributes['headers'] = self.custom_headers
+        if not post_attributes.get('headers', None):
+            post_attributes['headers'] = {}
+        post_attributes['headers']['Content-Type'] = self.encoding
 
-        #encoding_key = 'json' if self.encoding == EncodingType.JSON else 'data'
         post_attributes['data'] = self.format_payload()
 
         if self.signing_secret:
-            if not post_attributes.get('headers', None):
-                post_attributes['headers'] = {}
             post_attributes['headers']['x-hub-signature'] = self.create_signature(post_attributes['data'], \
                                                                                   self.signing_secret)
 
@@ -190,6 +186,11 @@ class Senderable(object):
         merged_dict = sending_metadata.copy()
         if isinstance(payload, basestring):
             payload = {'payload': payload}
+
+        # Add the hash value if there is one.
+        if self.hash_value is not None and len(self.hash_value) > 0:
+            payload['hash'] = self.hash_value
+
         merged_dict.update(payload)
         return merged_dict
 
