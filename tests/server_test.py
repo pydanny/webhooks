@@ -2,7 +2,6 @@ import os
 import time
 from datetime import datetime, timedelta
 from flask import Flask, request, abort, jsonify
-import json
 
 def temp_token():
     import binascii

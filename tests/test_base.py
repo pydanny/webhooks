@@ -1,5 +1,5 @@
 from subprocess import Popen
-from tests.test_server import app
+from tests.server_test import app
 import logging
 import sys
 import os

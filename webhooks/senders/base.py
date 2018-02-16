@@ -119,18 +119,18 @@ class Senderable(object):
 
         payload = self.payload
         sending_metadata = {'success': False}
-        post_attributes = {'timeout': self.timeout}
+        post_attributes = {'timeout': self.timeout, 'Content-Type': self.encoding}
 
         if self.custom_headers:
             post_attributes['headers'] = self.custom_headers
 
-        encoding_key = 'json' if self.encoding == EncodingType.JSON else 'data'
-        post_attributes[encoding_key] = self.format_payload()
+        #encoding_key = 'json' if self.encoding == EncodingType.JSON else 'data'
+        post_attributes['data'] = self.format_payload()
 
         if self.signing_secret:
             if not post_attributes.get('headers', None):
                 post_attributes['headers'] = {}
-            post_attributes['headers']['x-hub-signature'] = self.create_signature(post_attributes[encoding_key], \
+            post_attributes['headers']['x-hub-signature'] = self.create_signature(post_attributes['data'], \
                                                                                   self.signing_secret)
 
         for i, wait in enumerate(range(len(self.attempts) - 1)):
@@ -161,7 +161,8 @@ class Senderable(object):
                     sending_metadata['success'] = True
                     break
                 else:
-                    self.error = "Status code {}".format(self.response.status_code)
+                    self.error = "Status code (%d). Message: %s" % (self.response.status_code, self.response.text)
+
 
             except Exception as ex:
                 err_formatted = str(ex).replace('"',"'")
