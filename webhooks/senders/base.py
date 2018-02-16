@@ -187,6 +187,8 @@ class Senderable(object):
         sending_metadata['error'] = None if sending_metadata['success'] or not self.error else self.error
         sending_metadata['post_attributes'] = post_attributes
         merged_dict = sending_metadata.copy()
+        if isinstance(payload, basestring):
+            payload = {'payload': payload}
         merged_dict.update(payload)
         return merged_dict
 
