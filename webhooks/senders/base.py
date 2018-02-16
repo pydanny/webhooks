@@ -6,7 +6,6 @@ import logging
 import sys
 from time import sleep
 from Crypto.Hash import SHA256
-from urllib import urlencode
 
 from cached_property import cached_property
 from standardjson import StandardJSONEncoder
@@ -87,10 +86,6 @@ class Senderable(object):
         """
         # Create the payload by calling the hooked/wrapped function.
         payload = self.wrapped(*self.args, **self.kwargs)
-
-        # Add the hash value if there is one.
-        if self.hash_value is not None and len(self.hash_value) > 0:
-            payload['hash'] = self.hash_value
 
         return payload
 
