@@ -3,6 +3,13 @@
 History
 -------
 
+0.5.0 (2018-02-XY)
++++++++++++++++++++
+
+* Added encoding, header, and signature
+* Improved tests 
+* Better RQ support
+
 0.4.2 (2014-05-22)
 +++++++++++++++++++
 
