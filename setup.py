@@ -10,7 +10,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-version = "0.4.1"
+version = "0.5.0"
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist bdist_wheel upload')
@@ -53,5 +53,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',                
     ]
 )
