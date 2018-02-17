@@ -26,6 +26,8 @@ pip-log.txt
 .tox
 nosetests.xml
 htmlcov
+.pytest_cache/*
+env_py3/*
 
 # Translations
 *.mo
@@ -41,3 +43,7 @@ output/*/index.html
 
 # Sphinx
 docs/_build
+
+# idea
+.idea/*
+.cache/*
