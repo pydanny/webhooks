@@ -10,6 +10,7 @@ from Crypto.Hash import SHA256
 from cached_property import cached_property
 from standardjson import StandardJSONEncoder
 import requests
+from six import string_types
 
 
 if not logging.getLogger().getEffectiveLevel():
@@ -93,7 +94,7 @@ class Senderable(object):
     def jsonify_payload(self):
         """ Dump the payload to JSON """
         # Assume already json serialized
-        if isinstance(self.payload, basestring):
+        if isinstance(self.payload, string_types):
             return self.payload
         return json.dumps(self.payload, cls=StandardJSONEncoder)
 
@@ -184,7 +185,7 @@ class Senderable(object):
         sending_metadata['error'] = None if sending_metadata['success'] or not self.error else self.error
         sending_metadata['post_attributes'] = post_attributes
         merged_dict = sending_metadata.copy()
-        if isinstance(payload, basestring):
+        if isinstance(payload, string_types):
             payload = {'payload': payload}
 
         # Add the hash value if there is one.
@@ -195,7 +196,7 @@ class Senderable(object):
         return merged_dict
 
     def create_signature(self, payload, secret):
-        if not isinstance(payload,basestring):
+        if not isinstance(payload,string_types):
             # Data will be forms encoded
             payload = requests.PreparedRequest()._encode_params(payload)
         hmac = SHA256.new(secret)

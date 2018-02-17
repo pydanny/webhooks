@@ -5,6 +5,7 @@ requests>=2.2.1
 rq>=0.4.5
 wrapt>=1.8.0
 pycrypto>=2.6.1
+six>=1.10.0
 
 # Webhook test dependencies
 coverage
