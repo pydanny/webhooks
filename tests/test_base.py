@@ -7,7 +7,7 @@ import os
 
 def start_test_server():
     app.user_reloader = False
-    test_server = Popen(["python", os.path.join(os.path.dirname(__file__), "test_server.py")])
+    test_server = Popen(["python", os.path.join(os.path.dirname(__file__), "server_test.py")])
     return test_server
 
 def end_test_server(test_server):
