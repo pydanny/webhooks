@@ -196,10 +196,14 @@ class Senderable(object):
         return merged_dict
 
     def create_signature(self, payload, secret):
+        if not isinstance(secret,bytes):
+            secret = secret.encode('utf-8')
         if not isinstance(payload,string_types):
             # Data will be forms encoded
             payload = requests.PreparedRequest()._encode_params(payload)
         hmac = SHA256.new(secret)
+        if not isinstance(payload,bytes):
+            payload = payload.encode('utf-8')
         hmac.update(payload)
         return 'sha256=' + hmac.hexdigest()
 

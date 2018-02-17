@@ -61,14 +61,17 @@ def test_simple_signature():
     @unhashed_hook(event="example200", sender_callable=sender)
     def basic(wife, husband, creator, encoding, url, signing_secret):
         return {"husband": husband, "wife": wife}
-
-    status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", creator="pydanny", encoding="application/json", url="http://httpbin.org", signing_secret = "secret_key")
+    secret = "secret_key"
+    status = basic("Audrey Roy Greenfeld", "Daniel Roy Greenfeld", creator="pydanny", encoding="application/json", url="http://httpbin.org", signing_secret = secret)
 
     assert status['wife'] == "Audrey Roy Greenfeld"
     assert status['husband'] == "Daniel Roy Greenfeld"
     signature = status['post_attributes']['headers']['x-hub-signature']
     body = {"wife": "Audrey Roy Greenfeld", "husband": "Daniel Roy Greenfeld"}
-    hash = SHA256.new("secret_key")
-    hash.update(json.dumps(body, cls=StandardJSONEncoder))
+
+    if not isinstance(secret, bytes):
+        secret = secret.encode('utf-8')
+    hash = SHA256.new(secret)
+    hash.update(json.dumps(body, cls=StandardJSONEncoder).encode("utf-8"))
     expected_signature = "sha256="+hash.hexdigest()
     assert signature == expected_signature
