@@ -2,7 +2,7 @@
 webhooks
 ===============================
 
-.. image:: https://pypip.in/d/webhooks/badge.png
+.. image:: https://img.shields.io/pypi/dm/webhooks.svg
         :target: https://pypi.python.org/pypi/webhooks
 
 .. image:: https://badge.fury.io/py/webhooks.png
@@ -12,7 +12,7 @@ webhooks
    :alt: Build Status
    :target: https://travis-ci.org/pydanny/webhooks
 
-.. image:: https://pypip.in/wheel/webhooks/badge.png
+.. image:: https://img.shields.io/pypi/wheel/webhooks.svg
     :target: https://pypi.python.org/pypi/webhooks/
     :alt: Wheel Status
 
