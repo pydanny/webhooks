@@ -2,6 +2,8 @@
 webhooks
 ===============================
 
+_Note: This project is in the process of being reactivated and modernized. It's not ready to work anywhere._
+
 .. image:: https://img.shields.io/pypi/dm/webhooks.svg
         :target: https://pypi.python.org/pypi/webhooks
 
